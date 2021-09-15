@@ -190,6 +190,7 @@ h3{
 #result ul li:hover {
   background: #FFFFFF;
   color: #1086FF;
+  cursor: pointer;
 }
 
 @media all and (max-width: 768px){

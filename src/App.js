@@ -60,6 +60,11 @@ function SelectCity(props) {
         ()=>{
           props.setCity(document.getElementById('cityInput').value)
           props.setSelectCity(false) 
+          fetch('http://api.openweathermap.org/data/2.5/weather?id=' + cityId[document.getElementById('cityInput').value] + '&appid=7b9123e43545fc08731bc69b5f97d9f2&lang=ru')
+            .then(response => response.json())
+            .then(weather => {
+              props.setWeather(weather)
+            })
         }
       }>OK</button>
       <div id="result"></div>
@@ -91,7 +96,6 @@ function Temp(props) {
 }
 
 function MainWeather(props){
-  console.log(props)
   let icon = '';
   switch(props.weather.weather[0].icon){
     case '01d': icon = sun 
@@ -135,8 +139,8 @@ function MainWeather(props){
       <h2>
         {
         props.fahrenheitBoolean?
-        props.weather.main.temp:
-        ((props.weather.main.temp-32)*(5/9)).toFixed(2)
+        ((props.weather.main.temp)/10).toFixed(0):
+        (((props.weather.main.temp-32)*(5/9))/10).toFixed(0)
         }
       &#176;</h2> <br/>
       <span>{props.weather.weather[0].description}</span>
@@ -191,6 +195,7 @@ function CityBlock(props){
   if(props.selectCity == true){
     return(
       <SelectCity 
+        setWeather={props.setWeather}
         city={props.city} 
         setCity={props.setCity} 
         setSelectCity={props.setSelectCity} 
@@ -249,11 +254,13 @@ function App() {
       .then(weather => {
         setWeather(weather)
       },)
-  })
+    console.log(1)
+  }, [])
   return (
     <div className='container'>
       <div className="block1">
         <CityBlock 
+          setWeather ={setWeather}
           setSelectCity={setSelectCity} 
           selectCity={selectCity} 
           city={city} 
